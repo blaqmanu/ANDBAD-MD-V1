@@ -1,0 +1,42 @@
+# Exported from Render on 2024-11-27T18:23:42Z
+services:
+- type: web
+  name: ANDBAD-MD-V1
+  runtime: docker
+  repo: https://github.com/blaqmanu/ANDBAD-MD-V1
+  plan: free
+  envVars:
+  - key: SESSION_ID
+    sync: false
+  - key: ANTI_DELETE_MESSAGE
+    sync: false
+  - key: STARTING_BOT_MESSAGE
+    sync: false
+  - key: WARN_COUNT
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  - key: NUMERO_OWNER
+    sync: false
+  - key: IMAGE_MENU
+    sync: false
+  - key: BOT_NAME
+    sync: false
+  - key: AUTO_DOWNLOAD_STATUS
+    sync: false
+  - key: AUTO_READ_STATUS
+    sync: false
+  - key: PUBLIC_MODE
+    sync: false
+  - key: PREFIX
+    sync: false
+  - key: OWNER_NAME
+    sync: false
+  - key: SESSION_ID
+    sync: false
+  region: oregon
+  dockerContext: .
+  dockerfilePath: ./Dockerfile
+  previews:
+    generation: automatic
+version: "1"
