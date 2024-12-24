@@ -76,74 +76,37 @@ zokou({
 zokou({
   'nomCom': "pair",
   'reaction': '📡',
-  'categorie': 'User'
-}, async (_0x222dc0, _0x1f1bb4, _0x32d766) => {
+  'categorie': 'User   '
+}, async (chat, message, context) => {
   const {
-    repondre: _0x4d613c,
-    arg: _0x120cc8,
-    ms: _0x13d9b2
-  } = _0x32d766;
+    repondre: respond,
+    arg: args,
+    ms: meta
+  } = context;
+
   try {
-    if (!_0x120cc8 || _0x120cc8.length === 0x0) {
-      return _0x4d613c("Example Usage: .pair 255734980103.");
+    if (!args || args.length === 0) {
+      return respond("Usage example: .pair 255734980103.");
     }
-    await _0x4d613c(" Getting Your PairingCode.....A Moment!!!");
-    const _0x33a246 = encodeURIComponent(_0x120cc8.join(" "));
-    const _0x28c137 = "https://andbad-qr.onrender.com/pair?number=" + _0x33a246;
-    const _0x4617aa = await axios.get(_0x28c137);
-    const _0x3d9a61 = _0x4617aa.data;
-    if (_0x3d9a61 && _0x3d9a61.code) {
-      const _0x4de710 = _0x3d9a61.code;
-      const _0x5791a1 = "Your  PairingCode is: *" + _0x4de710 + "*\nUse it to Link Your WhatsApp Within 1 Minute Before it Expires\nHappy Bot Deployment!!!";
-      const _0x4a2613 = [{
-        'name': "cta_copy",
-        'buttonParamsJson': JSON.stringify({
-          'display_text': "📋 COPY CODE",
-          'id': 'copy_code',
-          'copy_code': _0x4de710
-        })
-      }, {
-        'name': "cta_url",
-        'buttonParamsJson': JSON.stringify({
-          'display_text': "FOLLOW 🤍 CHANNEL",
-          'url': 'https://whatsapp.com/channel/'
-        })
-      }];
-      const _0x44580c = generateWAMessageFromContent(_0x222dc0, {
-        'viewOnceMessage': {
-          'message': {
-            'messageContextInfo': {
-              'deviceListMetadata': {},
-              'deviceListMetadataVersion': 0x2
-            },
-            'interactiveMessage': proto.Message.InteractiveMessage.create({
-              'body': proto.Message.InteractiveMessage.Body.create({
-                'text': _0x5791a1
-              }),
-              'footer': proto.Message.InteractiveMessage.Footer.create({
-                'text': "> *POWERED BY andbad*"
-              }),
-              'header': proto.Message.InteractiveMessage.Header.create({
-                'title': '',
-                'subtitle': '',
-                'hasMediaAttachment': false
-              }),
-              'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                'buttons': _0x4a2613
-              })
-            })
-          }
-        }
-      }, {});
-      await _0x1f1bb4.relayMessage(_0x222dc0, _0x44580c.message, {
-        'messageId': _0x44580c.key.id
-      });
+    
+    await respond("Retrieving your pairing code..... One moment please!!!");
+    
+    const encodedNumber = encodeURIComponent(args.join(" "));
+    const apiUrl = "https://andbad-qr-k71b.onrender.com/pair?number=" + encodedNumber;
+    const apiResponse = await axios.get(apiUrl);
+    const responseData = apiResponse.data;
+
+    if (responseData && responseData.code) {
+      const pairingCode = responseData.code;
+      const messageContent = "Your pairing code is: *" + pairingCode + "*\nUse it to link your WhatsApp within the next minute before it expires.\nHappy bot deployment!!!\n\n> *POWERED BY andbad*";
+      
+      await respond(messageContent);
     } else {
-      throw new Error("Invalid response from Api.");
+      throw new Error("Invalid response from the API.");
     }
-  } catch (_0x5496b2) {
-    console.error("Error getting Api response:", _0x5496b2.message);
-    _0x4d613c("Error getting response from Api.");
+  } catch (error) {
+    console.error("Error retrieving the API response:", error.message);
+    respond("Error retrieving the API response.");
   }
 });
 zokou({
@@ -209,25 +172,33 @@ zokou({
   }
 });
 zokou({
-  'nomCom': "Andbad",
-  'reaction': '📡',
-  'categorie': 'AI'
-}, async (_0x5a9fd9, _0x142012, _0x3667d3) => {
+  'nomCom': "gpt2", // Command name
+  'reaction': '📡', // Reaction emoji
+  'categorie': 'AI' // Category
+}, async (context, user, params) => {
   const {
-    repondre: _0x4fa20d,
-    ms: _0x4826bc,
-    arg: _0x3f436d
-  } = _0x3667d3;
-  if (!_0x3f436d || !_0x3f436d[0x0]) {
-    return _0x4fa20d("YEES!\n _I'm listening to you._");
+    respond: respondFunction,
+    ms: messageService,
+    arg: args
+  } = params;
+
+  // Check if there are arguments provided
+  if (!args || !args[0]) {
+    return respondFunction("YES!\n _I'm listening to you._");
   }
+
   try {
-    const _0x5c3384 = _0x3f436d.join(" ");
-    const _0x440748 = await fetch('http://api.brainshop.ai/get?bid=181821&key=ltFzFIXrtj2SVMTX&uid=[uid]&msg=' + _0x5c3384);
-    const _0x33b522 = await _0x440748.json();
-    await _0x4fa20d(_0x33b522.cnt);
-  } catch {
-    _0x4fa20d("something went wrong...");
+    // Join the arguments into a single string
+    const userMessage = args.join(" ");
+    // Fetch response from the AI API
+    const response = await fetch('http://api.brainshop.ai/get?bid=181821&key=ltFzFIXrtj2SVMTX&uid=[uid]&msg=' + encodeURIComponent(userMessage));
+    const data = await response.json();
+    
+    // Send the AI's response back to the user
+    await respondFunction(data.cnt);
+  } catch (error) {
+    // Handle any errors that occur during the fetch
+    respondFunction("Something went wrong...");
   }
 });
 zokou({
@@ -260,109 +231,27 @@ zokou({
     _0x6162b8("Oops, an error occurred while processing your request");
   }
 });
-zokou({
-  'nomCom': "gpt",
-  'reaction': '📡',
-  'categorie': 'AI'
-}, async (_0x519f4b, _0x75f67d, _0x1ec287) => {
-  const {
-    repondre: _0x2a6e71,
-    arg: _0x4be2d3,
-    ms: _0xc63a20
-  } = _0x1ec287;
+zokou({ nomCom: "gpt", reaction: "🤔", categorie: "IA" }, async (dest, zk, commandeOptions) => {
+  const { repondre, arg, ms } = commandeOptions;
+
   try {
-    if (!_0x4be2d3 || _0x4be2d3.length === 0x0) {
-      return _0x2a6e71("Please ask a question.");
+    if (!arg || arg.length === 0) {
+      return repondre(`Please ask a question.`);
     }
-    const _0x5d0a29 = _0x4be2d3.join(" ");
-    const _0x351572 = await fetch("https://api.giftedtechnexus.co.ke/api/ai/gpt4?q=" + _0x5d0a29 + "&apikey=giftedtechk");
-    const _0x4d66b9 = await _0x351572.json();
-    if (_0x4d66b9 && _0x4d66b9.result) {
-      const _0x12cd9d = _0x4d66b9.result;
-      const _0x29d2ee = _0x12cd9d.match(/```([\s\S]*?)```/);
-      const _0x18ee4a = [{
-        'name': "cta_url",
-        'buttonParamsJson': JSON.stringify({
-          'display_text': "FOLLOW 🤍 CHANNEL",
-          'url': "https://whatsapp.com/channel/"
-        })
-      }];
-      if (_0x29d2ee) {
-        const _0x5b6d25 = _0x29d2ee[0x1];
-        _0x18ee4a.unshift({
-          'name': "cta_copy",
-          'buttonParamsJson': JSON.stringify({
-            'display_text': "📋 COPY YOUR CODE",
-            'id': "copy_code",
-            'copy_code': _0x5b6d25
-          })
-        });
-        const _0x272274 = generateWAMessageFromContent(_0x519f4b, {
-          'viewOnceMessage': {
-            'message': {
-              'messageContextInfo': {
-                'deviceListMetadata': {},
-                'deviceListMetadataVersion': 0x2
-              },
-              'interactiveMessage': proto.Message.InteractiveMessage.create({
-                'body': proto.Message.InteractiveMessage.Body.create({
-                  'text': _0x12cd9d
-                }),
-                'footer': proto.Message.InteractiveMessage.Footer.create({
-                  'text': "> *POWERED BY ANDBAD*"
-                }),
-                'header': proto.Message.InteractiveMessage.Header.create({
-                  'title': '',
-                  'subtitle': '',
-                  'hasMediaAttachment': false
-                }),
-                'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                  'buttons': _0x18ee4a
-                })
-              })
-            }
-          }
-        }, {});
-        await _0x75f67d.relayMessage(_0x519f4b, _0x272274.message, {
-          'messageId': _0x272274.key.id
-        });
-      } else {
-        const _0x3f8b3f = generateWAMessageFromContent(_0x519f4b, {
-          'viewOnceMessage': {
-            'message': {
-              'messageContextInfo': {
-                'deviceListMetadata': {},
-                'deviceListMetadataVersion': 0x2
-              },
-              'interactiveMessage': proto.Message.InteractiveMessage.create({
-                'body': proto.Message.InteractiveMessage.Body.create({
-                  'text': _0x12cd9d
-                }),
-                'footer': proto.Message.InteractiveMessage.Footer.create({
-                  'text': "> *POWERED BY ANDBAD*"
-                }),
-                'header': proto.Message.InteractiveMessage.Header.create({
-                  'title': '',
-                  'subtitle': '',
-                  'hasMediaAttachment': false
-                }),
-                'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                  'buttons': _0x18ee4a
-                })
-              })
-            }
-          }
-        }, {});
-        await _0x75f67d.relayMessage(_0x519f4b, _0x3f8b3f.message, {
-          'messageId': _0x3f8b3f.key.id
-        });
-      }
+
+    // Regrouper les arguments en une seule chaîne séparée par "-"
+    const question = arg.join(' ');
+    const response = await axios.get(`https://api.gurusensei.workers.dev/llama?prompt=${question}`);
+    
+    const data = response.data;
+    if (data) {
+      repondre(data.result);
     } else {
-      throw new Error("Invalid response from the GPT API.");
+      repondre("Error during response generation.");
     }
-  } catch (_0x1a7921) {
-    console.error("Error getting GPT response:", _0x1a7921.message);
-    _0x2a6e71("Error getting response from GPT.");
+  } catch (error) {
+    console.error('Erreur:', error.message || 'Une erreur s\'est produite');
+    repondre("Oops, an error occurred while processing your request.");
   }
 });
 zokou({
